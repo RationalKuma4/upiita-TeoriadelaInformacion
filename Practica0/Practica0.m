@@ -2,7 +2,7 @@ close all;
 clear all;
 
 %Abrir archivo
-archivo=fopen('C:\Users\Alumnos\Documents\MATLAB\principito2.txt','r');
+archivo=fopen('C:\Users\Anselmo-PC\Documents\GitHub\upiita-TeoriadelaInformacion\Practica0\principito2.txt','r');
 cadena=fscanf(archivo,'%c');
 numcaracteres=length(cadena);
 fclose(archivo);
