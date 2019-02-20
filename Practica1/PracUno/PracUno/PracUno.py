@@ -1,16 +1,15 @@
-
 from time import time
-
 import random
+import re
+import math
 
-tiempo_inicial = time()
-import math #importamos las funciones que nos ayuda a hacer el logaritmo
-documento = open('mci.txt','r')#abrimos archivo de texto
-texto = documento.read() #lower convierte todo en minusculas. lo quite porque ya estaba todo en minuscula XD/copiamos el texto en un string
-documento.close()#cerramos el archivo
-longitud = len(texto)#sacamos el tamaño del texto
+documento = open('mcil.txt','r')
+texto = documento.read()
+documento.close()
+texto = texto.lower()
+re.sub('[^a-zA-Z ]+?', '', texto)
+longitud = len(texto)
 
-#sacamos repeticiones de cada caracter
 diccionario= {} #declaramos diccionario vacio
 for indice2 in range(0,longitud):#for donde veremos el caracter con el indice en el que se encuentra el for en el strng texto
     valor = texto[indice2]#guardamos el valor de ese indice, en este caso es la letra
@@ -18,18 +17,11 @@ for indice2 in range(0,longitud):#for donde veremos el caracter con el indice en
     sumador=sumador+1#sumamos 1 a ese valor
     diccionario[valor]=sumador#actualizamos el valor de ese caracter
 
-del diccionario['\n']#eliminamos este caracter molesto que aparece por no ser del dogio ascci segun google
-#del diccionario['\x00']
-#del diccionario['/']
-#del diccionario['\xa0']#elimamos este
-#comentar este si estas en frances
-#del diccionario['·']#y este
-#del diccionario['þ']
-#del diccionario['Â']#y este
-#del diccionario['§']#y este
 #sacamos el numero total de caracteres texto
 sumatoriaDcicionario = sum(diccionario.values())#sumamos los valores de la aparicion de los caracteres, podriamos haber pueste el numero total de caracteres del texto pero se pone en caso de no saberlo y no contar con editor de texxto
 #sacamos probabilidad de los caracteres que aparecen
+
+
 probDicconario = {} #diccionrio vacioi para la probabilidad de cada caracter
 InfoDiccionario = {}#diccionario vacio para informacion de cada caracter
 entropiaDiccionario = {}#diccionario vacio para entropia de cada caracter
@@ -42,7 +34,6 @@ for clave,valor in diccionario.items():#for donde tenemos dos valores que recorr
     entropiaDiccionario[clave] =  prob*info#agregamos entropia individual de cada caracyer
 
 entropiaIndividuales = sum(entropiaDiccionario.values())#entropia dle texto como fuente sin memoria
-print(entropiaIndividuales)
 #print(probDicconario.values())
 
 
@@ -61,29 +52,6 @@ for indice2 in range(0,longitud-1):
     sumador = pares.get(valor,0)
     sumador=sumador+1
     pares[valor]=sumador
-
-listaux = list(pares.keys())
-for numero in range(0,len(pares)):
-    clave = listaux[numero]
-    if '\n' in clave:
-        del pares[clave]
-    elif '\xa0' in clave:
-        del pares[clave]
-    elif '·' in clave:
-        del pares[clave]
-    elif 'Â' in clave:
-        del pares[clave]
-    elif '\x00' in clave:
-        del pares[clave]
-    elif '/' in clave:
-        del pares[clave]
-    elif 'þ' in clave:
-        del pares[clave]
-    elif 'ï' in clave:
-        del pares[clave]
-    elif '§' in clave:
-        del pares[clave]
-
 
 
 probPares = {}
@@ -107,7 +75,6 @@ for indexad in range(0,len(listPares)-1):
     entropiaPares[cadenaCompleta] = infroCadena*probCadenaCompleta
 
 entropiadePares = sum(entropiaPares.values())#entopia de cadena de markov de primer orden
-print(entropiadePares)
 #print(probPares.values())
 
 
@@ -124,31 +91,6 @@ for indice2 in range(0,longitud-2):
     sumador = tercias.get(valor,0)
     sumador=sumador+1
     tercias[valor]=sumador
-
-
-listaux = list(tercias.keys())
-for numero in range(0,len(tercias)):
-    clave = listaux[numero]
-    if '\n' in clave:
-        del tercias[clave]
-    elif '\xa0' in clave:
-        del tercias[clave]
-    elif '·' in clave:
-        del tercias[clave]
-    elif 'Â' in clave:
-        del tercias[clave]
-    elif '\x00' in clave:
-        del tercias[clave]
-    elif '/' in clave:
-        del tercias[clave]
-    elif 'þ' in clave:
-        del tercias[clave]
-    elif 'ï' in clave:
-        del tercias[clave]
-    elif '§' in clave:
-        del tercias[clave]
-
-
 
 
 probTercias = {}
@@ -172,7 +114,6 @@ for indexad in range(0,len(lisTercias)-1):
     entropiaTercias[cadenaCompleta] = infroCadena*probCadenaCompleta
 
 entropiadeTercias = sum(entropiaTercias.values())#entropia de cadena de markov de segundo orden
-print(entropiadeTercias)
 #print(probTercias.values())
 
 #Lter = list(tercias.items())
@@ -234,10 +175,10 @@ for indexad in range(0,len(lisCuarteto)-1):
 
 entropiadeCuarteto = sum(entropiaCuarteto.values())#entropia de cadena de markov de segundo orden
 
-Lcuar = list(cuarteto.items())
-Lcuar = sorted(Lcuar,key=lambda x:x[1],reverse=True)
-for listita in range(0,10):
-    print("aparicion descendente de cuartetos de  caracteres",Lcuar[listita])
+#Lcuar = list(cuarteto.items())
+#Lcuar = sorted(Lcuar,key=lambda x:x[1],reverse=True)
+#for listita in range(0,10):
+#    print("aparicion descendente de cuartetos de  caracteres",Lcuar[listita])
 ###########################################################################################################################################
 ##########################################################################################################################################3
 #sacamos repeticiones de 5 caracteres seguidos

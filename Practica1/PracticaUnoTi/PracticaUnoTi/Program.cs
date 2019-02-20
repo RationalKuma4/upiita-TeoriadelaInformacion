@@ -8,9 +8,9 @@ namespace PracticaUnoTi
 {
     internal static class Program
     {
-        private static IEnumerable<char> Abecedario { get; } = new List<char>
+        private static IEnumerable<string> Abecedario { get; } = new List<string>
         {
-            'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',' '
+            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"," "
         };
 
         private static void Main()
@@ -22,58 +22,33 @@ namespace PracticaUnoTi
             NormalizarTexto(ref textoIngles);
             NormalizarTexto(ref textoFrances);
 
-            #region Sin memoria
+            #region Sin memoria Ingles
 
             var repeticionesIngles = ConteoRepeticionesCaracter(textoIngles);
-            var repeticionesFrances = ConteoRepeticionesCaracter(textoFrances);
-
             var probabilidadesIngles = ProbabilidaxCaracter(repeticionesIngles, textoIngles.Length);
-            var probabilidadesFrances = ProbabilidaxCaracter(repeticionesFrances, textoFrances.Length);
-
             var informacionIngles = CantidadInformacionxCarcater(probabilidadesIngles);
-            var informacionFrances = CantidadInformacionxCarcater(probabilidadesFrances);
-
             var entropiaIngles = Entropia(probabilidadesIngles, informacionIngles);
-            var entropiaFrances = Entropia(probabilidadesFrances, informacionFrances);
 
             #endregion
 
-
-            #region Pares
+            #region Pares Ingles
 
             var paresIngles = ParesTexto(textoIngles);
-            var paresFrances = ParesTexto(textoFrances);
-
             var paresProbabilidadIngles = ProbabilidadxPar(paresIngles, repeticionesIngles, probabilidadesIngles);
-            var paresProbabilidadFrances = ProbabilidadxPar(paresFrances, repeticionesFrances, probabilidadesFrances);
-
             var informacionParesIngles = InformacionxPar(paresProbabilidadIngles);
-            var informacionParesFrances = InformacionxPar(paresProbabilidadFrances);
-
             var entropiaParesIngles = EntropiaPares(paresProbabilidadIngles, informacionParesIngles);
-            var entropiaParesFrances = EntropiaPares(paresProbabilidadFrances, informacionParesFrances);
 
             #endregion
 
-            /*
             #region Tercias
 
             var terciasIngles = TerciasTexto(textoIngles);
-            var terciasFrances = TerciasTexto(textoFrances);
-
-            var terciasProbabilidadIngles = ProbabilidadxTercia(terciasIngles, paresIngles.ToDictionary(t => t.Par, t => t.Cantidad),
-                paresProbabilidadIngles);
-            var terciasProbabilidadFrances = ProbabilidadxTercia(terciasFrances, paresFrances.ToDictionary(t => t.Par, t => t.Cantidad),
-                paresProbabilidadFrances);
-
+            var terciasProbabilidadIngles = ProbabilidadxTercia(terciasIngles, paresIngles,
+                paresProbabilidadIngles.ToDictionary(d => d.Par, d => d.Probabilidad));
             var terciasInformacionIngles = InformacionxTercia(terciasProbabilidadIngles);
-            var terciasInformacionFrances = InformacionxTercia(terciasProbabilidadFrances);
-
             var entropiaTerciasIngles = EntropiaTercias(terciasProbabilidadIngles, terciasInformacionIngles);
-            var entropiaTerciasFrances = EntropiaTercias(terciasProbabilidadFrances, terciasInformacionFrances);
 
             #endregion
-            */
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
@@ -81,91 +56,9 @@ namespace PracticaUnoTi
             Console.ReadLine();
         }
 
-        private static double EntropiaTercias(Dictionary<string, double> propabilidad, Dictionary<string, double> informacion)
-        {
-            var terminos = new List<double>();
-            for (var i = 0; i < propabilidad.Count; i++)
-            {
-                terminos.Add(propabilidad.ElementAt(i).Value * informacion.ElementAt(i).Value);
-            }
+        #region Metodos Tercias
 
-            var terminoL = new List<double>();
-            foreach (var termino in terminos)
-            {
-                if (double.IsNaN(termino))
-                {
-                    terminoL.Add(0);
-                }
-                else
-                {
-                    terminoL.Add(termino);
-                }
-            }
-
-            return terminoL.Sum();
-        }
-
-        private static Dictionary<string, double> InformacionxTercia(Dictionary<string, double> probabilidades)
-        {
-            var informacionTercias = new Dictionary<string, double>();
-            foreach (var tercia in probabilidades)
-            {
-                if (tercia.Value == 0)
-                    informacionTercias.Add(tercia.Key, 0);
-                else
-                    informacionTercias.Add(tercia.Key, Math.Log(1 / tercia.Value, 2));
-            }
-
-            return informacionTercias;
-        }
-
-        private static double EntropiaPares(Dictionary<string, double> propabilidad, Dictionary<string, double> informacion)
-        {
-            var terminos = new List<double>();
-            for (var i = 0; i < propabilidad.Count; i++)
-            {
-                terminos.Add(propabilidad.ElementAt(i).Value * informacion.ElementAt(i).Value);
-            }
-
-            return terminos.Sum();
-        }
-
-        private static Dictionary<string, double> ProbabilidadxTercia(List<Tercias> tercias, Dictionary<string, double> repeticiones,
-            Dictionary<string, double> probabilidades)
-        {
-            var probabilidadesTercia = new Dictionary<string, double>();
-            foreach (var tercia in tercias)
-            {
-                var palabra = tercia.Tercia.Remove(tercia.Tercia.Length - 1);
-                var numPares = tercias.First(p => p.Tercia.Equals(tercia.Tercia)).Cantidad;
-                var denPares = repeticiones[palabra];
-
-                var propabilidadPalabra = probabilidades[palabra];
-                var probCondicional = numPares / denPares;
-
-                var prob = propabilidadPalabra * probCondicional;
-
-                probabilidadesTercia.Add(tercia.Tercia, prob);
-            }
-
-            return probabilidadesTercia;
-        }
-
-        private static Dictionary<string, double> InformacionxPar(Dictionary<string, double> probabilidades)
-        {
-            var informacionPares = new Dictionary<string, double>();
-            foreach (var par in probabilidades)
-            {
-                if (par.Value == 0)
-                    informacionPares.Add(par.Key, 0);
-                else
-                    informacionPares.Add(par.Key, Math.Log(1 / par.Value, 2));
-            }
-
-            return informacionPares;
-        }
-
-        private static List<Tercias> TerciasTexto(string texto)
+        private static Dictionary<string, double> TerciasTexto(string texto)
         {
             var tercias = new List<Tercias>();
             for (var i = 0; i < texto.Length - 2; i++)
@@ -174,37 +67,57 @@ namespace PracticaUnoTi
                 if (tercias.Exists(p => p.Tercia.Equals(tercia)))
                     tercias.First(p => p.Tercia.Equals(tercia)).Cantidad++;
                 else
-                    tercias.Add(new Tercias { Tercia = tercia, Cantidad = 0 });
+                    tercias.Add(new Tercias { Tercia = tercia, Cantidad = 1 });
             }
 
-            return tercias;
+            return tercias.ToDictionary(t => t.Tercia, t => t.Cantidad);
         }
 
-
-
-
-        private static Dictionary<string, double> ProbabilidadxPar(List<Pares> pares, Dictionary<char, double> repeticiones,
-            Dictionary<char, double> probabilidades)
+        private static List<Tercias> ProbabilidadxTercia(Dictionary<string, double> tercias, Dictionary<string, double> repeticiones,
+            Dictionary<string, double> probabilidades)
         {
-            var probabilidadesPar = new Dictionary<string, double>();
-            foreach (var par in pares)
+            var probabilidadesTercias = new List<Tercias>();
+            foreach (var terc in tercias)
             {
-                var palabra = par.Par.Remove(par.Par.Length - 1);
-                var numPares = pares.First(p => p.Par.Equals(par.Par)).Cantidad;
-                var denPares = repeticiones[char.Parse(palabra)];
+                var palabra = terc.Key.Remove(terc.Key.Length - 1);
+                var numPares = tercias[terc.Key];
+                var denPares = repeticiones[palabra];
 
-                var propabilidadPalabra = probabilidades[char.Parse(palabra)];
-                var probCondicional = numPares / denPares;
+                var proPalabra = probabilidades[palabra];
+                var proCondicinal = numPares / denPares;
+                var prob = proPalabra * proCondicinal;
 
-                var prob = propabilidadPalabra * probCondicional;
-
-                probabilidadesPar.Add(par.Par, prob);
+                probabilidadesTercias.Add(new Tercias { Tercia = terc.Key, ProbCondicional = proCondicinal, Probabilidad = prob });
             }
 
-            return probabilidadesPar;
+            return probabilidadesTercias;
         }
 
-        private static List<Pares> ParesTexto(string texto)
+        private static Dictionary<string, double> InformacionxTercia(List<Tercias> probabilidades)
+        {
+            var informacionTercias = new Dictionary<string, double>();
+            foreach (var tercia in probabilidades)
+                informacionTercias.Add(tercia.Tercia, Math.Log(1 / tercia.ProbCondicional, 2));
+
+            return informacionTercias;
+        }
+
+        private static double EntropiaTercias(List<Tercias> propabilidad, Dictionary<string, double> informacion)
+        {
+            var terminos = new List<double>();
+            for (var i = 0; i < propabilidad.Count; i++)
+            {
+                terminos.Add(propabilidad[i].Probabilidad * informacion.ElementAt(i).Value);
+            }
+
+            return terminos.Sum();
+        }
+
+        #endregion
+
+        #region Metodos Pares
+
+        private static Dictionary<string, double> ParesTexto(string texto)
         {
             var pares = new List<Pares>();
             for (var i = 0; i < texto.Length - 1; i++)
@@ -213,55 +126,93 @@ namespace PracticaUnoTi
                 if (pares.Exists(p => p.Par.Equals(par)))
                     pares.First(p => p.Par.Equals(par)).Cantidad++;
                 else
-                    pares.Add(new Pares { Par = par, Cantidad = 0 });
+                    pares.Add(new Pares { Par = par, Cantidad = 1 });
             }
 
-            return pares;
+            return pares.ToDictionary(p => p.Par, p => p.Cantidad);
         }
 
+        private static List<Pares> ProbabilidadxPar(Dictionary<string, double> pares, Dictionary<string, double> repeticiones,
+            Dictionary<string, double> probabilidades)
+        {
+            var probabilidadesPar = new List<Pares>();
+            foreach (var pair in pares)
+            {
+                var palabra = pair.Key.Remove(pair.Key.Length - 1);
+                var numPares = pares[pair.Key];
+                var denPares = repeticiones[palabra];
 
-        private static double Entropia(Dictionary<char, double> propabilidad, Dictionary<char, double> informacion)
+                var proPalabra = probabilidades[palabra];
+                var proCondicinal = numPares / denPares;
+                var prob = proPalabra * proCondicinal;
+
+                probabilidadesPar.Add(new Pares { Par = pair.Key, ProbCondicional = proCondicinal, Probabilidad = prob });
+            }
+
+            return probabilidadesPar;
+        }
+
+        private static Dictionary<string, double> InformacionxPar(List<Pares> probabilidades)
+        {
+            var informacionPares = new Dictionary<string, double>();
+            foreach (var par in probabilidades)
+                informacionPares.Add(par.Par, Math.Log(1 / par.ProbCondicional, 2));
+
+            return informacionPares;
+        }
+
+        private static double EntropiaPares(List<Pares> propabilidad, Dictionary<string, double> informacion)
         {
             var terminos = new List<double>();
             for (var i = 0; i < propabilidad.Count; i++)
             {
-                terminos.Add(propabilidad.ElementAt(i).Value * informacion.ElementAt(i).Value);
+                terminos.Add(propabilidad[i].Probabilidad * informacion.ElementAt(i).Value);
             }
 
             return terminos.Sum();
         }
 
-        private static Dictionary<char, double> CantidadInformacionxCarcater(Dictionary<char, double> diccionario)
-        {
-            var entropias = new Dictionary<char, double>();
-            foreach (var letra in diccionario)
-            {
-                entropias.Add(letra.Key, Math.Log(1 / letra.Value, 2));
-            }
+        #endregion
 
-            return entropias;
+        #region Metodos sin memoria
+
+        private static Dictionary<string, double> ConteoRepeticionesCaracter(string texto)
+        {
+            var repeticiones = new Dictionary<string, double>();
+            foreach (var letra in Abecedario)
+                repeticiones.Add(letra, texto.Count(l => l.Equals(char.Parse(letra))));
+
+            return repeticiones;
         }
 
-        private static Dictionary<char, double> ProbabilidaxCaracter(Dictionary<char, double> diccionario, int total)
+        private static Dictionary<string, double> ProbabilidaxCaracter(Dictionary<string, double> diccionario, int total)
         {
-            var probabilidades = new Dictionary<char, double>();
+            var probabilidades = new Dictionary<string, double>();
             foreach (var letra in diccionario)
-            {
                 probabilidades.Add(letra.Key, letra.Value / total);
-            }
 
             return probabilidades;
         }
 
-        private static Dictionary<char, double> ConteoRepeticionesCaracter(string texto)
+        private static Dictionary<string, double> CantidadInformacionxCarcater(Dictionary<string, double> diccionario)
         {
-            var repeticiones = new Dictionary<char, double>();
-            foreach (var letra in Abecedario)
-            {
-                repeticiones.Add(letra, texto.Count(l => l.Equals(letra)));
-            }
-            return repeticiones;
+            var entropias = new Dictionary<string, double>();
+            foreach (var letra in diccionario)
+                entropias.Add(letra.Key, Math.Log(1 / letra.Value, 2));
+
+            return entropias;
         }
+
+        private static double Entropia(Dictionary<string, double> propabilidad, Dictionary<string, double> informacion)
+        {
+            var terminos = new List<double>();
+            for (var i = 0; i < propabilidad.Count; i++)
+                terminos.Add(propabilidad.ElementAt(i).Value * informacion.ElementAt(i).Value);
+
+            return terminos.Sum();
+        }
+
+        #endregion
 
         private static void NormalizarTexto(ref string texto)
         {
@@ -287,11 +238,15 @@ namespace PracticaUnoTi
     {
         public string Par { get; set; }
         public double Cantidad { get; set; }
+        public double Probabilidad { get; set; }
+        public double ProbCondicional { get; set; }
     }
 
     internal class Tercias
     {
         public string Tercia { get; set; }
         public double Cantidad { get; set; }
+        public double Probabilidad { get; set; }
+        public double ProbCondicional { get; set; }
     }
 }
