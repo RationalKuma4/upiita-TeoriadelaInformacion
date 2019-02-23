@@ -8,11 +8,6 @@ namespace PracticaUnoTi
 {
     internal static class Program
     {
-        private static IEnumerable<string> Abecedario { get; } = new List<string>
-        {
-            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"," "
-        };
-
         private static void Main()
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -178,8 +173,12 @@ namespace PracticaUnoTi
 
         private static Dictionary<string, double> ConteoRepeticionesCaracter(string texto)
         {
+            var abecedario = new List<string>
+            {
+            "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"," "
+            };
             var repeticiones = new Dictionary<string, double>();
-            foreach (var letra in Abecedario)
+            foreach (var letra in abecedario)
                 repeticiones.Add(letra, texto.Count(l => l.Equals(char.Parse(letra))));
 
             return repeticiones;
