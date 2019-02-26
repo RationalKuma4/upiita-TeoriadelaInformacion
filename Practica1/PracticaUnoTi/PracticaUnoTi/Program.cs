@@ -45,6 +45,82 @@ namespace PracticaUnoTi
 
             #endregion
 
+            #region Sin memoria Frances
+
+            var repeticionesFrances = ConteoRepeticionesCaracter(textoFrances);
+            var probabilidadesFrances = ProbabilidaxCaracter(repeticionesFrances, textoFrances.Length);
+            var informacionFrances = CantidadInformacionxCarcater(probabilidadesFrances);
+            var entropiaFrances = Entropia(probabilidadesFrances, informacionFrances);
+
+            #endregion
+
+            #region Pares Frances
+
+            var paresFrances = ParesTexto(textoFrances);
+            var paresProbabilidadFrances = ProbabilidadxPar(paresFrances, repeticionesFrances, probabilidadesFrances);
+            var informacionParesFrances = InformacionxPar(paresProbabilidadFrances);
+            var entropiaParesFrances = EntropiaPares(paresProbabilidadFrances, informacionParesFrances);
+
+            #endregion
+
+            #region Tercias Frances
+
+            var terciasFrances = TerciasTexto(textoFrances);
+            var terciasProbabilidadFrances = ProbabilidadxTercia(terciasFrances, paresFrances,
+                paresProbabilidadFrances.ToDictionary(d => d.Par, d => d.Probabilidad));
+            var terciasInformacionFrances = InformacionxTercia(terciasProbabilidadFrances);
+            var entropiaTerciasFrances = EntropiaTercias(terciasProbabilidadFrances, terciasInformacionFrances);
+
+            #endregion
+
+            #region Reportar datos
+
+            Console.WriteLine($@"Libro: the martian chronicles
+Cantidad de caracteres ingles: {textoIngles.Length} 
+Cantidad de caracteres frances: {textoFrances.Length}");
+
+            Console.WriteLine();
+            Console.WriteLine("Ingles");
+            Console.WriteLine($"Entropia sin memoria: {entropiaIngles} bit/simbolo \n");
+            Console.WriteLine($"Segundo orden: {entropiaParesIngles} bit/simbolo");
+            Console.WriteLine("Casos mas frecuentes Ingles");
+            foreach (var keyValuePair in paresIngles.OrderByDescending(p => p.Value)
+                .Take(10))
+            {
+                Console.WriteLine($"Pareja: {keyValuePair.Key}, Repeticiones: {keyValuePair.Value}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Tercer orden: {entropiaTerciasIngles} bit/simbolo");
+            Console.WriteLine("Casos mas frecuentes Ingles");
+            foreach (var keyValuePair in terciasIngles.OrderByDescending(p => p.Value)
+                .Take(10))
+            {
+                Console.WriteLine($"Tercia: {keyValuePair.Key}, Repeticiones: {keyValuePair.Value}");
+            }
+
+
+            Console.WriteLine();
+            Console.WriteLine("Frances");
+            Console.WriteLine($"Entropia sin memoria: {entropiaFrances} bit/simbolo \n");
+            Console.WriteLine($"Primer orden: {entropiaParesFrances} bit/simbolo");
+            foreach (var keyValuePair in paresFrances.OrderByDescending(p => p.Value)
+                .Take(10))
+            {
+                Console.WriteLine($"Pareja: {keyValuePair.Key}, Repeticiones: {keyValuePair.Value}");
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine($"Segundo orden: {entropiaTerciasFrances} bit/simbolo");
+            foreach (var keyValuePair in terciasFrances.OrderByDescending(p => p.Value)
+                .Take(10))
+            {
+                Console.WriteLine($"Pareja: {keyValuePair.Key}, Repeticiones: {keyValuePair.Value}");
+            }
+            Console.WriteLine();
+            #endregion
+
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine(elapsedMs / 360);
