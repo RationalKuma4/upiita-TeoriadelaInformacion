@@ -12,6 +12,8 @@ namespace PracUno
     {
         private static void Main()
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent?.FullName;
             var textoIngles = File.ReadAllText($@"{path}/Textos/451i.txt");
             var textoFrances = File.ReadAllText($@"{path}/Textos/451f.txt");
@@ -83,8 +85,8 @@ Cantidad de caracteres frances: {textoFrances.Length}");
 
             Console.WriteLine();
             Console.WriteLine("Ingles");
-            Console.WriteLine($"Entropia sin memoria: {entropiaIngles} bit/simbolo \n");
-            Console.WriteLine($"Segundo orden: {entropiaParesIngles} bit/simbolo");
+            Console.WriteLine($"Entropia sin memoria: {entropiaIngles} bits/simbolo \n");
+            Console.WriteLine($"Segundo orden: {entropiaParesIngles} bits/simbolo");
             Console.WriteLine("Casos mas frecuentes Ingles");
             foreach (var keyValuePair in paresIngles.OrderByDescending(p => p.Value)
                 .Take(10))
@@ -93,7 +95,7 @@ Cantidad de caracteres frances: {textoFrances.Length}");
             }
 
             Console.WriteLine();
-            Console.WriteLine($"Tercer orden: {entropiaTerciasIngles} bit/simbolo");
+            Console.WriteLine($"Tercer orden: {entropiaTerciasIngles} bits/simbolo");
             Console.WriteLine("Casos mas frecuentes Ingles");
             foreach (var keyValuePair in terciasIngles.OrderByDescending(p => p.Value)
                 .Take(10))
@@ -104,8 +106,8 @@ Cantidad de caracteres frances: {textoFrances.Length}");
 
             Console.WriteLine();
             Console.WriteLine("Frances");
-            Console.WriteLine($"Entropia sin memoria: {entropiaFrances} bit/simbolo \n");
-            Console.WriteLine($"Primer orden: {entropiaParesFrances} bit/simbolo");
+            Console.WriteLine($"Entropia sin memoria: {entropiaFrances} bits/simbolo \n");
+            Console.WriteLine($"Primer orden: {entropiaParesFrances} bits/simbolo");
             foreach (var keyValuePair in paresFrances.OrderByDescending(p => p.Value)
                 .Take(10))
             {
@@ -114,16 +116,20 @@ Cantidad de caracteres frances: {textoFrances.Length}");
 
             Console.WriteLine();
 
-            Console.WriteLine($"Segundo orden: {entropiaTerciasFrances} bit/simbolo");
+            Console.WriteLine($"Segundo orden: {entropiaTerciasFrances} bits/simbolo");
             foreach (var keyValuePair in terciasFrances.OrderByDescending(p => p.Value)
                 .Take(10))
             {
                 Console.WriteLine($"Pareja: {keyValuePair.Key}, Repeticiones: {keyValuePair.Value}");
             }
             Console.WriteLine();
-            Console.ReadLine();
 
             #endregion
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine(elapsedMs / 1000);
+            Console.ReadLine();
         }
 
         #region Util
