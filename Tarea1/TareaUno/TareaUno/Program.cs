@@ -29,24 +29,21 @@ namespace TareaUno
             double[] probInicial = { 1.0 / 3, 1.0 / 3, 1.0 / 3 };
 
             #region Informacion mutua
-
             var infoMutuaUno = CalcularInformacionMutua(matrizUno, probInicial);
             var infoMutuaDos = CalcularInformacionMutua(matrizDos, probInicial);
             var infoMutuaTres = CalcularInformacionMutua(matrizTres, probInicial);
-
             #endregion
 
             #region Capacidad de canal
-
             var matricesIniciales = MatrizProbIniciales();
             var capacidadCanalUno = CalculaCapacidadCanal(matrizUno, matricesIniciales);
             var capacidadCanalDos = CalculaCapacidadCanal(matrizDos, matricesIniciales);
             var capacidadCanalTres = CalculaCapacidadCanal(matrizTres, matricesIniciales);
-
             #endregion
         }
 
-        private static CapacidadCanal CalculaCapacidadCanal(double[,] matriz, IEnumerable<double[]> matricesInic)
+        private static CapacidadCanal CalculaCapacidadCanal(double[,] matriz,
+            IEnumerable<double[]> matricesInic)
         {
             var informaciones = new Dictionary<double[], double>();
 
@@ -103,7 +100,8 @@ namespace TareaUno
                     if (matriz[i, j] == 0.0)
                         informacionMutua += 0.0;
                     else
-                        informacionMutua += probInicial[i] * matriz[i, j] * Math.Log(matriz[i, j] / valorSumaInterior, 2);
+                        informacionMutua += probInicial[i] * matriz[i, j]
+                                                           * Math.Log(matriz[i, j] / valorSumaInterior, 2);
                 }
             }
             return informacionMutua;
