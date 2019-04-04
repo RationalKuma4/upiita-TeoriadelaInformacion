@@ -10,7 +10,6 @@ G=[1 0 0 0 1 1 0;
 msg=[1 1 0 1];
 code=encode(msg,7,4,'linear',G)
 dec=decode(code,7,4,'linear',G)
-%%
 
 I = eye(11);
 paridad=[1 0 0 1;
