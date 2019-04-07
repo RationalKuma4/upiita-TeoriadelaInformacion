@@ -2,10 +2,10 @@ close all;
 clear all;
 clc;
 
-pb157=zeros(1,50);
-pb74=zeros(1,50);
-pb1511=zeros(1,50);
 p=0.07864:-0.0015:0.0059-0.0015;
+pb157=zeros(1,length(p));
+pb74=zeros(1,length(p));
+pb1511=zeros(1,length(p));
 j=1;
 
 for i=p
@@ -27,6 +27,7 @@ for i=p
     j=j+1;
 end
 
+%%
 figure(1);
 plot(p,pb157,'LineWidth',1.5);
 title('$BCH(15,7)$','Interpreter','latex');
@@ -49,7 +50,7 @@ ylabel('$Pb$','Interpreter','latex');
 grid on;
 
 figure(4);
-plot(p,pb157,p,pb74,p,pb1511,'LineWidth',1.5);
+plot(p,pb157,'-.',p,pb74,'--',p,pb1511,'LineWidth',1.5);
 title('$BCH(15,11), \ BCH(7,4), \ BCH(15,11)$','Interpreter','latex');
 xlabel('$P$','Interpreter','latex');
 ylabel('$Pb$','Interpreter','latex');
