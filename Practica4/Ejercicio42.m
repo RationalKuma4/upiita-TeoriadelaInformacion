@@ -2,8 +2,8 @@ clear all;
 close all;
 clc;    
 
-I = eye(11);
-paridad=[1 0 0 1;
+I = eye(11); % Identidad
+paridad=[1 0 0 1; % Paridad
     1 1 1 1;
     0 0 1 1;
     1 0 1 1;
@@ -14,9 +14,7 @@ paridad=[1 0 0 1;
     0 1 1 1;
     1 1 0 1;
     1 0 1 0];
-
 g=[I paridad];
-
 k=11;
 for i=1:2^k 
     for j=k:-1:1
@@ -27,6 +25,5 @@ for i=1:2^k
         end
     end
 end
-
 c=rem(u*g,2);
 d_min=min(sum((c(2:2^k,:))'));

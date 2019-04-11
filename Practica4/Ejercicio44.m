@@ -7,7 +7,6 @@ pb157=zeros(1,length(p));
 pb74=zeros(1,length(p));
 pb1511=zeros(1,length(p));
 j=1;
-
 for i=p
     % BCH(15,7)
     pbsc157=i;

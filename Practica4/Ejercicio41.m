@@ -1,7 +1,6 @@
 clear all;
 close all;
 clc;
-
 k=4; % (7,4)
 for i=1:2^k 
     for j=k:-1:1
@@ -12,7 +11,7 @@ for i=1:2^k
         end
     end
 end
-
+% [I P]
 g=[1 0 0 0 1 1 0; 0 1 0 0 0 1 1; 0 0 1 0 1 1 1; 0 0 0 1 1 0 1];
-c=rem(u*g,2); % Funcion de residuo
+c=rem(u*g,2); % Funcion de residuo de division
 d_min=min(sum((c(2:2^k,:))')); % Distancia minima de Hamming
