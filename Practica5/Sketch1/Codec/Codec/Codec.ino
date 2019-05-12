@@ -40,7 +40,6 @@ void loop()
 		ct = digitalRead(CT);
 	}
 
-
 	c5 = digitalRead(C5);
 	c6 = digitalRead(C6);
 	c7 = digitalRead(C7);
@@ -50,7 +49,7 @@ void loop()
 	dato[0] = SumaModuloDos(SumaModuloDos(c6, c7), c8);
 	dato[1] = SumaModuloDos(SumaModuloDos(c5, c6), c7);
 	dato[2] = SumaModuloDos(SumaModuloDos(c5, c6), c8);
-	dato[2] = SumaModuloDos(SumaModuloDos(c5, c7), c8);
+	dato[3] = SumaModuloDos(SumaModuloDos(c5, c7), c8);
 	dato[4] = c5;
 	dato[5] = c6;
 	dato[6] = c7;
@@ -63,7 +62,7 @@ void loop()
 	Serial.println("");
 	delay(10000);
 
-	/*if (ct == 1)
+	if (ct == 1)
 	{
 		for (auto i = 0; i < 8; i++)
 		{
@@ -71,7 +70,7 @@ void loop()
 		}
 		Serial.println("");
 		TransmisionSerial(dato);
-	}*/
+	}
 }
 
 void TransmisionSerial(int dato[8])
@@ -85,6 +84,8 @@ void TransmisionSerial(int dato[8])
 
 	Serial.print("");
 	Serial.print("Transmision terminada");
+	digitalWrite(TX, 0);
+	Serial.print("");
 	delay(2000);
 }
 
