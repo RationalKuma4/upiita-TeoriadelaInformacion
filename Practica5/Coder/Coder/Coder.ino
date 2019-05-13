@@ -81,7 +81,7 @@ void TransmisionSerial(int dato[8])
 		Serial.print(dato[i]);
 		delay(1000);
 	}
-	
+
 	Serial.print("");
 	Serial.print("Transmision terminada");
 	digitalWrite(TX, 0);
