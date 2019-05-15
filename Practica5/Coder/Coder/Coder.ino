@@ -20,14 +20,24 @@
 
 #define C2 23
 
+#define S1 52
+#define S2 50
+#define S3 48
+#define S4 46
+
 int d1, d2, d3, d4, cd, c1, c2;
 int e1, e2, e3, e4, e5, e6, e7, e8;
 int dato[8]{ 0,0,0,0,0,0,0,0 };
 
+int s1, s2, s3, s4;
+
 void ReadPins();
 int SumaModuloDos(int a, int b, int c);
-void TransmisionSerial(int dato[8], int salida);
+void TransmisionSerial(int codigo[8], int salida);
 int NormalizaInversion(int dato);
+
+int SumaModuloDos(int a, int b, int c, int d);
+void Sindrome(int cod[8]);
 
 void setup()
 {
@@ -86,6 +96,11 @@ void loop()
 		if (e8) dato[7] = NormalizaInversion(dato[7]);
 
 		TransmisionSerial(dato, C2);
+
+		Serial.println("Recepcion terminada");
+
+		// Sindrome
+		Sindrome(dato);
 	}
 
 }
@@ -120,12 +135,17 @@ int SumaModuloDos(int a, int b, int c)
 	return a ^ b^ c;
 }
 
-void TransmisionSerial(int dato[8], int salida)
+int SumaModuloDos(int a, int b, int c, int d)
+{
+	return a ^ b^ c^ d;
+}
+
+void TransmisionSerial(int codigo[8], int salida)
 {
 	for (auto i = 0; i < 8; i++)
 	{
-		digitalWrite(salida, dato[i]);
-		Serial.print(dato[i]);
+		digitalWrite(salida, codigo[i]);
+		Serial.print(codigo[i]);
 		delay(1000);
 	}
 
@@ -142,6 +162,25 @@ int NormalizaInversion(int dato)
 	return inverso;
 }
 
+void Sindrome(int cod[8])
+{
+	Serial.println("Sindrome");
+
+	s1 = SumaModuloDos(cod[0], cod[5], cod[6], cod[7]);
+	s2 = SumaModuloDos(cod[1], cod[4], cod[5], cod[6]);
+	s3 = SumaModuloDos(cod[2], cod[4], cod[5], cod[7]);
+	s4 = SumaModuloDos(cod[3], cod[4], cod[6], cod[7]);
+
+	Serial.print(s1);
+	Serial.print(s2);
+	Serial.print(s3);
+	Serial.print(s4);
+
+	digitalWrite(S1, s1);
+	digitalWrite(S2, s2);
+	digitalWrite(S3, s3);
+	digitalWrite(S4, s4);
+}
 
 /*
 #define C5 8
