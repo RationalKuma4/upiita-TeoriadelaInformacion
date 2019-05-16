@@ -128,6 +128,11 @@ void ReadPins()
 	pinMode(CE, INPUT);
 
 	pinMode(C2, OUTPUT);
+
+	pinMode(S1, OUTPUT);
+	pinMode(S2, OUTPUT);
+	pinMode(S3, OUTPUT);
+	pinMode(S4, OUTPUT);
 }
 
 int SumaModuloDos(int a, int b, int c)
