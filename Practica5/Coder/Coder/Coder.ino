@@ -28,6 +28,8 @@
 int d1, d2, d3, d4, cd, c1, c2;
 int e1, e2, e3, e4, e5, e6, e7, e8;
 int dato[8]{ 0,0,0,0,0,0,0,0 };
+int error[8]{ 0,0,0,0,0,0,0,0 };
+int sindrome[4]{ 0,0,0,0 };
 
 int s1, s2, s3, s4;
 
@@ -45,6 +47,8 @@ void setup()
 	Serial.begin(9600);
 	Serial.println("Puerto abierto");
 }
+
+void CorreccionError(int datoError[8]);
 
 void loop()
 {
@@ -69,22 +73,20 @@ void loop()
 	dato[7] = d4;
 
 	delay(1000);
-
-	Serial.println("");
 	TransmisionSerial(dato, C1);
 
 	// Agregar error en el canal
 	if (digitalRead(CE))
 	{
 		// Agregar error
-		e1 = digitalRead(E1);
-		e2 = digitalRead(E2);
-		e3 = digitalRead(E3);
-		e4 = digitalRead(E4);
-		e5 = digitalRead(E5);
-		e6 = digitalRead(E6);
-		e7 = digitalRead(E7);
-		e8 = digitalRead(E8);
+		error[0] = e1 = digitalRead(E1);
+		error[1] = e2 = digitalRead(E2);
+		error[2] = e3 = digitalRead(E3);
+		error[3] = e4 = digitalRead(E4);
+		error[4] = e5 = digitalRead(E5);
+		error[5] = e6 = digitalRead(E6);
+		error[5] = e7 = digitalRead(E7);
+		error[7] = e8 = digitalRead(E8);
 
 		if (e1) dato[0] = NormalizaInversion(dato[0]);
 		if (e2) dato[1] = NormalizaInversion(dato[1]);
@@ -97,10 +99,12 @@ void loop()
 
 		TransmisionSerial(dato, C2);
 
-		Serial.println("Recepcion terminada");
-
 		// Sindrome
-		Sindrome(dato);
+		Sindrome(error);
+
+		// Correccion Error
+		CorreccionError(dato);
+
 	}
 
 }
@@ -147,6 +151,7 @@ int SumaModuloDos(int a, int b, int c, int d)
 
 void TransmisionSerial(int codigo[8], int salida)
 {
+	Serial.println("");
 	for (auto i = 0; i < 8; i++)
 	{
 		digitalWrite(salida, codigo[i]);
@@ -171,10 +176,10 @@ void Sindrome(int cod[8])
 {
 	Serial.println("Sindrome");
 
-	s1 = SumaModuloDos(cod[0], cod[5], cod[6], cod[7]);
-	s2 = SumaModuloDos(cod[1], cod[4], cod[5], cod[6]);
-	s3 = SumaModuloDos(cod[2], cod[4], cod[5], cod[7]);
-	s4 = SumaModuloDos(cod[3], cod[4], cod[6], cod[7]);
+	sindrome[0] = s1 = SumaModuloDos(cod[0], cod[5], cod[6], cod[7]);
+	sindrome[1] = s2 = SumaModuloDos(cod[1], cod[4], cod[5], cod[6]);
+	sindrome[2] = s3 = SumaModuloDos(cod[2], cod[4], cod[5], cod[7]);
+	sindrome[3] = s4 = SumaModuloDos(cod[3], cod[4], cod[6], cod[7]);
 
 	Serial.print(s1);
 	Serial.print(s2);
@@ -185,6 +190,11 @@ void Sindrome(int cod[8])
 	digitalWrite(S2, s2);
 	digitalWrite(S3, s3);
 	digitalWrite(S4, s4);
+}
+
+void CorreccionError(int datoError[8])
+{
+	
 }
 
 /*
