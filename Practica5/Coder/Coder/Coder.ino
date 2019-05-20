@@ -25,6 +25,15 @@
 #define S3 48
 #define S4 46
 
+#define COR1 44
+#define COR2 42
+#define COR3 40
+#define COR4 38
+
+#define CC1 36
+#define CC2 34
+#include <iso646.h>
+
 int d1, d2, d3, d4, cd, c1, c2;
 int e1, e2, e3, e4, e5, e6, e7, e8;
 int dato[8]{ 0,0,0,0,0,0,0,0 };
@@ -137,6 +146,11 @@ void ReadPins()
 	pinMode(S2, OUTPUT);
 	pinMode(S3, OUTPUT);
 	pinMode(S4, OUTPUT);
+
+	pinMode(COR1, OUTPUT);
+	pinMode(COR2, OUTPUT);
+	pinMode(COR3, OUTPUT);
+	pinMode(COR4, OUTPUT);
 }
 
 int SumaModuloDos(int a, int b, int c)
@@ -190,11 +204,67 @@ void Sindrome(int cod[8])
 	digitalWrite(S2, s2);
 	digitalWrite(S3, s3);
 	digitalWrite(S4, s4);
+	Serial.println("");
 }
 
 void CorreccionError(int datoError[8])
 {
-	
+	Serial.println("Corrigiendo errror");
+	if (sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3]) //1000
+	{
+		dato[0] xor 1;
+	}
+	else if (!sindrome[0] && sindrome[1] && !sindrome[2] && !sindrome[3]) //0100
+	{
+		dato[1] xor 1;
+	}
+	else if (!sindrome[0] && !sindrome[1] && sindrome[2] && !sindrome[3]) //0010
+	{
+		dato[2] xor 1;
+	}
+	else if (!sindrome[0] && !sindrome[1] && !sindrome[2] && sindrome[3]) //0001
+	{
+		dato[3] xor 1;
+	}
+	else if (!sindrome[0] && sindrome[1] && sindrome[2] && sindrome[3]) //0111
+	{
+		dato[4] xor 1;
+	}
+	else if (sindrome[0] && sindrome[1] && sindrome[2] && !sindrome[3]) //1110
+	{
+		dato[5] xor 1;
+	}
+	else if (sindrome[0] && sindrome[1] && !sindrome[2] && sindrome[3]) //1101
+	{
+		dato[6] xor 1;
+	}
+	else if (sindrome[0] && !sindrome[1] && sindrome[2] && sindrome[3]) //1011
+	{
+		dato[7] xor 1;
+	}
+	else if (!sindrome[0] && sindrome[1] && !sindrome[2] && sindrome[3]) //0101 doble 2,4 
+	{
+		dato[1] xor 1;
+		dato[3] xor 1;
+	}
+	else if (sindrome[0] && !sindrome[1] && sindrome[2] && !sindrome[3]) //1010 doble 1,3
+	{
+		dato[0] xor 1;
+		dato[2] xor 1;
+	}
+
+	for (auto i = 4; i < 8; i++)
+	{
+		Serial.print(dato[i]);
+		delay(1000);
+	}
+
+	digitalWrite(COR1, dato[4]);
+	digitalWrite(COR2, dato[5]);
+	digitalWrite(COR3, dato[6]);
+	digitalWrite(COR4, dato[7]);
+
+	Serial.println("");
 }
 
 /*
