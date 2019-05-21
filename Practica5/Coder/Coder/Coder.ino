@@ -1,3 +1,6 @@
+#include <iso646.h>
+#include <vector>
+
 #define D1 53
 #define D2 51
 #define D3 49
@@ -30,9 +33,13 @@
 #define COR3 40
 #define COR4 38
 
-#define CC1 36
-#define CC2 34
-#include <iso646.h>
+#define CCOUT1 34
+#define CCIN1 30
+
+#define CCOUT2 26
+#define CCIN2 22
+
+
 
 int d1, d2, d3, d4, cd, c1, c2;
 int e1, e2, e3, e4, e5, e6, e7, e8;
@@ -40,15 +47,20 @@ int dato[8]{ 0,0,0,0,0,0,0,0 };
 int error[8]{ 0,0,0,0,0,0,0,0 };
 int sindrome[4]{ 0,0,0,0 };
 
+int codigoCanal[8]{ 0,0,0,0,0,0,0,0 };
+int codigoR[8]{ 0,0,0,0,0,0,0,0 };
+
 int s1, s2, s3, s4;
 
 void ReadPins();
 int SumaModuloDos(int a, int b, int c);
 void TransmisionSerial(int codigo[8], int salida);
 int NormalizaInversion(int dato);
-
+void CorreccionError(int datoError[8]);
 int SumaModuloDos(int a, int b, int c, int d);
 void Sindrome(int cod[8]);
+void TransmisionCanalError(int code[8]);
+void TransmisionErrorDecoder(int r[8]);
 
 void setup()
 {
@@ -56,8 +68,6 @@ void setup()
 	Serial.begin(9600);
 	Serial.println("Puerto abierto");
 }
-
-void CorreccionError(int datoError[8]);
 
 void loop()
 {
@@ -81,8 +91,7 @@ void loop()
 	dato[6] = d3;
 	dato[7] = d4;
 
-	delay(1000);
-	TransmisionSerial(dato, C1);
+	TransmisionCanalError(dato);
 
 	// Agregar error en el canal
 	if (digitalRead(CE))
@@ -106,6 +115,8 @@ void loop()
 		if (e7) dato[6] = NormalizaInversion(dato[6]);
 		if (e8) dato[7] = NormalizaInversion(dato[7]);
 
+		TransmisionErrorDecoder(dato);
+
 		TransmisionSerial(dato, C2);
 
 		// Sindrome
@@ -116,6 +127,36 @@ void loop()
 
 	}
 
+}
+
+void TransmisionErrorDecoder(int r[8])
+{
+	// Transmision a canal -> error
+	Serial.println("Transmision de error -> decoder");
+	for (auto i = 0; i < 8; ++i)
+	{
+		delay(1000);
+		digitalWrite(CCOUT1, r[i]);
+		digitalWrite(C2, r[i]);
+		delay(1000);
+		codigoCanal[7 - i] = digitalRead(CCIN1);
+	}
+	Serial.println("Transmision terminada");
+}
+
+void TransmisionCanalError(int code[8])
+{
+	// Transmision a canal -> error
+	Serial.println("Transmision a canal -> error");
+	for (auto i = 0; i < 8; ++i)
+	{
+		delay(1000);
+		digitalWrite(CCOUT2, code[i]);
+		digitalWrite(C1, code[i]);
+		delay(1000);
+		codigoR[7 - i] = digitalRead(CCIN2);
+	}
+	Serial.println("Transmision terminada");
 }
 
 void ReadPins()
@@ -151,6 +192,12 @@ void ReadPins()
 	pinMode(COR2, OUTPUT);
 	pinMode(COR3, OUTPUT);
 	pinMode(COR4, OUTPUT);
+
+	pinMode(CCOUT1, OUTPUT);
+	pinMode(CCOUT2, OUTPUT);
+
+	pinMode(CCIN1, INPUT);
+	pinMode(CCIN2, INPUT);
 }
 
 int SumaModuloDos(int a, int b, int c)
@@ -267,99 +314,3 @@ void CorreccionError(int datoError[8])
 	Serial.println("");
 }
 
-/*
-#define C5 8
-#define C6 9
-#define C7 10
-#define C8 11
-#define CT 12
-#define TX 13
-
-int c5, c6, c7, c8, ct, tx;
-int dato[8]{ 0,0,0,0,0,0,0,0 };
-
-void TransmisionSerial(int dato[8]);
-int SumaModuloDos(int a, int b);
-
-void setup()
-{
-	pinMode(C5, INPUT);
-	pinMode(C6, INPUT);
-	pinMode(C7, INPUT);
-	pinMode(C8, INPUT);
-	pinMode(CT, INPUT);
-	pinMode(TX, OUTPUT);
-
-	Serial.begin(9600);
-	Serial.println("Puerto abierto");
-}
-
-void loop()
-{
-	delay(2000);
-	ct = digitalRead(CT);
-
-	while (ct == 0)
-	{
-		ct = digitalRead(CT);
-	}
-
-	c5 = digitalRead(C5);
-	c6 = digitalRead(C6);
-	c7 = digitalRead(C7);
-	c8 = digitalRead(C8);
-
-	// Codigo
-	dato[0] = SumaModuloDos(SumaModuloDos(c6, c7), c8);
-	dato[1] = SumaModuloDos(SumaModuloDos(c5, c6), c7);
-	dato[2] = SumaModuloDos(SumaModuloDos(c5, c6), c8);
-	dato[3] = SumaModuloDos(SumaModuloDos(c5, c7), c8);
-	dato[4] = c5;
-	dato[5] = c6;
-	dato[6] = c7;
-	dato[7] = c8;
-
-	for (auto i = 0; i < 8; i++)
-	{
-		Serial.print(dato[i]);
-	}
-	Serial.println("");
-	delay(10000);
-
-	if (ct == 1)
-	{
-		for (auto i = 0; i < 8; i++)
-		{
-			Serial.print(dato[i]);
-		}
-		Serial.println("");
-		TransmisionSerial(dato);
-	}
-}
-
-void TransmisionSerial(int dato[8])
-{
-	for (auto i = 0; i < 8; i++)
-	{
-		digitalWrite(TX, dato[i]);
-		Serial.print(dato[i]);
-		delay(1000);
-	}
-
-	Serial.print("");
-	Serial.print("Transmision terminada");
-	digitalWrite(TX, 0);
-	Serial.print("");
-	delay(2000);
-}
-
-int SumaModuloDos(int a, int b)
-{
-	int res;
-	if (a == 0 && b == 0) res = 0;
-	else if (a == 0 && b == 1) res = 1;
-	else if (a == 1 && b == 0) res = 1;
-	else res = 0;
-	return res;
-}
-*/
