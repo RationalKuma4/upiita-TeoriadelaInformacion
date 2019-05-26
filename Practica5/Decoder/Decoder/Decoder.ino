@@ -32,11 +32,11 @@
 #define COR3 40
 #define COR4 38
 
-#define CCOUT1 34
-#define CCIN1 30
+#define CCOUT1 36
+#define CCIN1 34
 
-#define CCOUT2 26
-#define CCIN2 32
+#define CCOUT2 32
+#define CCIN2 30
 
 int d1, d2, d3, d4, cd, c1, c2;
 int ce[8]{ 0,0,0,0,0,0,0,0 };
@@ -151,14 +151,14 @@ void ReadPins()
 
 void TransmisionCanalError(int codidgo[8])
 {
-	Serial.println("Transmision a canal -> error");
+	Serial.println("Transmision fuente -> canal");
 	for (auto i = 0; i < 8; ++i)
 	{
-		delay(1000);
 		digitalWrite(CCOUT1, codidgo[i]);
 		ce[i] = digitalRead(CCIN1);
 		digitalWrite(C1, ce[i]);
 		Serial.print(ce[i]);
+		delay(1000);
 	}
 	Serial.println();
 	Serial.println("Transmision terminada");
@@ -176,9 +176,9 @@ void PatronError()
 	error[6] = digitalRead(E7);
 	error[7] = digitalRead(E8);
 	Serial.println("Patron error");
-	for (int i = 0; i < 8; ++i)
+	/*for (int i = 0; i < 8; ++i)
 		Serial.print(error[i]);
-	Serial.println();
+	Serial.println();*/
 }
 
 void AgregaError()
@@ -191,14 +191,17 @@ void AgregaError()
 	if (error[5]) ce[5] = ce[5] xor 1;
 	if (error[6]) ce[6] = ce[6] xor 1;
 	if (error[7]) ce[7] = ce[7] xor 1;
-	Serial.println("Codigo con error");
+	/*Serial.println("Codigo con error");
 	for (int i = 0; i < 8; ++i)
 		Serial.print(ce[i]);
-	Serial.println();
+	Serial.println();*/
 }
 
 void ObtieneSindrome(int error[8])
 {
+	if (!cr[0] && !cr[1] && !cr[2] && !cr[3] && !cr[4] && !cr[5] &&
+		!cr[6]) return;
+
 	sindrome[0] = error[0] ^ error[5] ^ error[6] ^ error[7];
 	sindrome[1] = error[1] ^ error[4] ^ error[5] ^ error[6];
 	sindrome[2] = error[2] ^ error[4] ^ error[5] ^ error[7];
@@ -209,23 +212,23 @@ void ObtieneSindrome(int error[8])
 	digitalWrite(S3, sindrome[2]);
 	digitalWrite(S4, sindrome[3]);
 
-	Serial.println("Sindrome");
+	/*Serial.println("Sindrome");
 	for (int i = 0; i < 4; ++i)
 		Serial.print(sindrome[i]);
-	Serial.println();
+	Serial.println();*/
 }
 
 void TransmisionErrorDecoder(int codidgo[8])
 {
-	Serial.println("Transmision a error -> decoder");
+
+	Serial.println("Transmision error -> decoder");
 	for (auto i = 0; i < 8; ++i)
 	{
-		delay(1000);
-		//digitalWrite(CCOUT2, codidgo[i]);
+		digitalWrite(CCOUT2, codidgo[i]);
 		Serial.print(digitalRead(CCIN2));
 		cr[i] = digitalRead(CCIN2);
 		digitalWrite(C2, cr[i]);
-		//Serial.print(cr[i]);
+		delay(1000);
 	}
 	Serial.println();
 	Serial.println("Transmision terminada");
@@ -234,6 +237,9 @@ void TransmisionErrorDecoder(int codidgo[8])
 
 void DecodificaPalabra()
 {
+	if (!sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3])
+		return;
+
 	Serial.println("Corrigiendo errror");
 	if (sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3]) //1000
 	{
@@ -281,7 +287,6 @@ void DecodificaPalabra()
 	for (auto i = 4; i < 8; i++)
 	{
 		Serial.print(cr[i]);
-		delay(1000);
 	}
 
 	digitalWrite(COR1, cr[4]);
@@ -289,7 +294,7 @@ void DecodificaPalabra()
 	digitalWrite(COR3, cr[6]);
 	digitalWrite(COR4, cr[7]);
 	Serial.println("");
-	delay(2000);
+	delay(000);
 }
 
 /*
