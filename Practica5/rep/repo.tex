@@ -79,7 +79,7 @@ codificador, de acuerdo con el siguiente diagrama.
 \end{figure}
 
 \newpage
-\section{Diagrama de circuito eléctrico de implementación}
+\section{Diagrama de circuito de implementación}
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.75\textwidth]{circ.png}
@@ -492,7 +492,7 @@ Y la palabra código resultante es:
 \begin{figure}[ht]
     \centering
     \includegraphics[width=.8\textwidth]{ccode.png}
-    \caption{ircuito lógico codificador.}
+    \caption{Circuito lógico codificador.}
 \end{figure}
 
 \newpage
@@ -572,6 +572,38 @@ $$e_{2,4}=\neg s_1+s_2+\neg s_3+s_4$$
 \end{figure}
 
 \newpage
+\section{Resultados simulación}
+La simulación fue realizada con ayuda del progrma Proteus y la librería simulino. Estas 
+herramientas permiten ejecutar el código realizado en un arduino virtual.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{simu0.png}
+    \caption{Esquema de simulación.}
+\end{figure}
+\\
+Para la simulación se utilzo la palabra dato \textbf{1010}, lo que da como resulatdo la palabra 
+código \textbf{10101010}. Posteriomente se le agrego un error doble en las posiciones 2, 4. 
+Agregando estos errores la palabra resultante con error es \textbf{11111010}.
+
+\newpage
+Como se muestra en la siguiente imagen, en el canal \textbf{A} se tiene la palabra codificada y el 
+canal \textbf{B} la palabra codificada con error.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{simu1.png}
+    \caption{Pulsos generados de la palabra código y la palabra código con error.}
+\end{figure}
+\newpage
+En la última imagen de esta sección se muestra las palabra código, el síndrome y la palabra 
+dato recuperada después de corregir el error y decodificarla, que fue \textbf{1010}.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{simu2.png}
+	\caption{Pulsos generados de la palabra código, palabra código con error, síndrome y 
+	palabra dato.}
+\end{figure}
+
+\newpage
 \section{Listado de asignación de terminales}
 \begin{figure}[ht]
     \centering
@@ -613,5 +645,38 @@ De acuerdo con información por el IDE de arduino, la utilización es la siguien
 \end{figure}
 
 \section{Conclusiones}
+Al comienzo de la realización de la práctica fue necesario empezar con el análisis del caso particular 
+asignado. Este análisis permitió conocer las ecuaciones que debían ser implementadas para el desarrollo 
+de la práctica. La matriz generadora asignada fue particular, ya que el componente de paridad se 
+encontraba invertido, lo que al inicio fue algo confuso. Pero después de investigar acerca de esta 
+característica, se encontró la solución, la cual no distaba mucho de lo aprendido en clase.
+\\ \\
+Aparte del punto mencionado anteriormente, el análisis para encontrar las ecuaciones para la 
+codificación, para obtener el síndrome y las ecuaciones de error, se desarrolló normalmente. 
+Cabe mencionar que para este caso se debía de contemplar dos pares de errores dobles en las posiciones 
+[1,3] y [2,4]. 
+\\ \\
+En la implementación se requirió que la comunicación entre los bloques del codificador, el canal 
+y el decodificador fueran en serie, lo que supuso una dificultad. Para sortear esto surgieron dos 
+ideas, controlar la transmisión del codificador y del canal o sincronizar los datos transmitidos. 
+Se optó por controlar la transmisión del codificador y del canal, ya que permitía tener un mejor 
+control de los componentes y eventos dentro del programa. La comunicación serial en este caso fue 
+realizada mediante dos puentes dentro del mismo Arduino y con un pin extra de salida para mostrar 
+los datos transmitidos.
+\\ \\
+En la etapa de pruebas se introdujeron las combinaciones para una palabra dato de 4 bits. 
+Así mismo, se probaron los errores simples en todas las posiciones disponibles y los pares de 
+errores dobles. Posteriormente se probaron errores dobles en diferentes posiciones e incluso errores 
+triples. Como resultado de esta última etapa de pruebas para el decodificador, mientras que realizaba 
+algo, no necesariamente era correcto. Esto debido a que fue diseñado para casos específicos de errores 
+dobles con la capacidad de corregir errores simples. En algunos casos podría decirse que corrigió 
+correctamente, pero esta respuesta debió clasificarse como falso positivo, ya que la entrada no era 
+la correcta.
+\\ \\
+Con la realización de esta última práctica se entendió mejor la manera en que la corrección 
+de errores es implementada en un sistema de comunicación. Es importante señalar que la etapa de 
+análisis es fundamental y debe de revisarse y comprobarse en busca de errores que puedan afectar 
+en la implementación. También se debe de contemplar las limitaciones que el diseño y la implantación 
+tenga, para dejar claro lo que es capaz de realizar.
 
 \end{document}

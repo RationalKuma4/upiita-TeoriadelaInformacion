@@ -1,6 +1,6 @@
 \BOOKMARK [1][-]{section.1}{Objetivo}{}% 1
 \BOOKMARK [1][-]{section.2}{Descripci\363n}{}% 2
-\BOOKMARK [1][-]{section.3}{Diagrama de circuito el\351ctrico de implementaci\363n}{}% 3
+\BOOKMARK [1][-]{section.3}{Diagrama de circuito de implementaci\363n}{}% 3
 \BOOKMARK [2][-]{subsection.3.1}{Timers utilizados}{section.3}% 4
 \BOOKMARK [1][-]{section.4}{C\363digo}{}% 5
 \BOOKMARK [1][-]{section.5}{Circuito l\363gico}{}% 6
@@ -11,9 +11,10 @@
 \BOOKMARK [3][-]{subsubsection.5.2.2}{Circuito l\363gico decodificador}{subsection.5.2}% 11
 \BOOKMARK [1][-]{section.6}{Palabras dato y codigo}{}% 12
 \BOOKMARK [1][-]{section.7}{S\355ndrome vs patr\363n de error}{}% 13
-\BOOKMARK [1][-]{section.8}{Listado de asignaci\363n de terminales}{}% 14
-\BOOKMARK [1][-]{section.9}{Diagramas de flujo}{}% 15
-\BOOKMARK [2][-]{subsection.9.1}{Codificador}{section.9}% 16
-\BOOKMARK [2][-]{subsection.9.2}{Decodificador}{section.9}% 17
-\BOOKMARK [2][-]{subsection.9.3}{Utilizaci\363n de dispositivo}{section.9}% 18
-\BOOKMARK [1][-]{section.10}{Conclusiones}{}% 19
+\BOOKMARK [1][-]{section.8}{Resultados simulaci\363n}{}% 14
+\BOOKMARK [1][-]{section.9}{Listado de asignaci\363n de terminales}{}% 15
+\BOOKMARK [1][-]{section.10}{Diagramas de flujo}{}% 16
+\BOOKMARK [2][-]{subsection.10.1}{Codificador}{section.10}% 17
+\BOOKMARK [2][-]{subsection.10.2}{Decodificador}{section.10}% 18
+\BOOKMARK [2][-]{subsection.10.3}{Utilizaci\363n de dispositivo}{section.10}% 19
+\BOOKMARK [1][-]{section.11}{Conclusiones}{}% 20

@@ -1,7 +1,7 @@
 \babel@toc {spanish}{}
 \contentsline {section}{\numberline {1}Objetivo}{4}{section.1}% 
 \contentsline {section}{\numberline {2}Descripci\IeC {\'o}n}{4}{section.2}% 
-\contentsline {section}{\numberline {3}Diagrama de circuito el\IeC {\'e}ctrico de implementaci\IeC {\'o}n}{5}{section.3}% 
+\contentsline {section}{\numberline {3}Diagrama de circuito de implementaci\IeC {\'o}n}{5}{section.3}% 
 \contentsline {subsection}{\numberline {3.1}Timers utilizados}{5}{subsection.3.1}% 
 \contentsline {section}{\numberline {4}C\IeC {\'o}digo}{6}{section.4}% 
 \contentsline {section}{\numberline {5}Circuito l\IeC {\'o}gico}{13}{section.5}% 
@@ -12,9 +12,10 @@
 \contentsline {subsubsection}{\numberline {5.2.2}Circuito l\IeC {\'o}gico decodificador}{17}{subsubsection.5.2.2}% 
 \contentsline {section}{\numberline {6}Palabras dato y codigo}{18}{section.6}% 
 \contentsline {section}{\numberline {7}S\IeC {\'\i }ndrome vs patr\IeC {\'o}n de error}{19}{section.7}% 
-\contentsline {section}{\numberline {8}Listado de asignaci\IeC {\'o}n de terminales}{20}{section.8}% 
-\contentsline {section}{\numberline {9}Diagramas de flujo}{21}{section.9}% 
-\contentsline {subsection}{\numberline {9.1}Codificador}{22}{subsection.9.1}% 
-\contentsline {subsection}{\numberline {9.2}Decodificador}{23}{subsection.9.2}% 
-\contentsline {subsection}{\numberline {9.3}Utilizaci\IeC {\'o}n de dispositivo}{24}{subsection.9.3}% 
-\contentsline {section}{\numberline {10}Conclusiones}{24}{section.10}% 
+\contentsline {section}{\numberline {8}Resultados simulaci\IeC {\'o}n}{20}{section.8}% 
+\contentsline {section}{\numberline {9}Listado de asignaci\IeC {\'o}n de terminales}{23}{section.9}% 
+\contentsline {section}{\numberline {10}Diagramas de flujo}{24}{section.10}% 
+\contentsline {subsection}{\numberline {10.1}Codificador}{25}{subsection.10.1}% 
+\contentsline {subsection}{\numberline {10.2}Decodificador}{26}{subsection.10.2}% 
+\contentsline {subsection}{\numberline {10.3}Utilizaci\IeC {\'o}n de dispositivo}{27}{subsection.10.3}% 
+\contentsline {section}{\numberline {11}Conclusiones}{27}{section.11}% 
