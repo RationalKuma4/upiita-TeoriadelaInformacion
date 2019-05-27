@@ -1,10 +1,19 @@
 \BOOKMARK [1][-]{section.1}{Objetivo}{}% 1
 \BOOKMARK [1][-]{section.2}{Descripci\363n}{}% 2
-\BOOKMARK [1][-]{section.3}{An\341lisis}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Palabras c\363digo}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{S\355ndrome}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Correcci\363n de error}{section.3}% 6
-\BOOKMARK [1][-]{section.4}{Circuito}{}% 7
-\BOOKMARK [1][-]{section.5}{C\363digo}{}% 8
-\BOOKMARK [1][-]{section.6}{Algoritmo}{}% 9
-\BOOKMARK [1][-]{section.7}{Conclusiones}{}% 10
+\BOOKMARK [1][-]{section.3}{Diagrama de circuito el\351ctrico de implementaci\363n}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Timers utilizados}{section.3}% 4
+\BOOKMARK [1][-]{section.4}{C\363digo}{}% 5
+\BOOKMARK [1][-]{section.5}{Circuito l\363gico}{}% 6
+\BOOKMARK [2][-]{subsection.5.1}{Coder}{section.5}% 7
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Circuito l\363gico}{subsection.5.1}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Decoder}{section.5}% 9
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Circuito l\363gico s\355ndrome}{subsection.5.2}% 10
+\BOOKMARK [3][-]{subsubsection.5.2.2}{Circuito l\363gico decodificador}{subsection.5.2}% 11
+\BOOKMARK [1][-]{section.6}{Palabras dato y codigo}{}% 12
+\BOOKMARK [1][-]{section.7}{S\355ndrome vs patr\363n de error}{}% 13
+\BOOKMARK [1][-]{section.8}{Listado de asignaci\363n de terminales}{}% 14
+\BOOKMARK [1][-]{section.9}{Diagramas de flujo}{}% 15
+\BOOKMARK [2][-]{subsection.9.1}{Codificador}{section.9}% 16
+\BOOKMARK [2][-]{subsection.9.2}{Decodificador}{section.9}% 17
+\BOOKMARK [2][-]{subsection.9.3}{Utilizaci\363n de dispositivo}{section.9}% 18
+\BOOKMARK [1][-]{section.10}{Conclusiones}{}% 19

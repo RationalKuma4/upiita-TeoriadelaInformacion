@@ -1,5 +1,7 @@
+// Libreria para operaciones logicas
 #include <iso646.h>
-
+// Pins para palabra dato, control de fuente y muestra
+// de transmision
 #define D1 53
 #define D2 51
 #define D3 49
@@ -8,7 +10,8 @@
 #define CD 45
 
 #define C1 43
-
+// Pins para erro, control de canal y muestra
+// de transmision
 #define E1 41
 #define E2 39
 #define E3 37
@@ -21,23 +24,24 @@
 #define CE 25
 
 #define C2 23
-
+// Pins para sindrome
 #define S1 52
 #define S2 50
 #define S3 48
 #define S4 46
-
+// Pins para palabra corregida
 #define COR1 44
 #define COR2 42
 #define COR3 40
 #define COR4 38
-
+// Pins para canal
 #define CCOUT1 36
 #define CCIN1 34
-
+// Pins para canal
 #define CCOUT2 32
 #define CCIN2 30
 
+// Variables globales para codificacion  y decodficacion
 int d1, d2, d3, d4, cd, c1, c2;
 int ce[8]{ 0,0,0,0,0,0,0,0 };
 int error[8]{ 0,0,0,0,0,0,0,0 };
@@ -45,6 +49,7 @@ int r[8]{ 0,0,0,0,0,0,0,0 };
 int sindrome[4]{ 0,0,0,0 };
 int cr[8]{ 0,0,0,0,0,0,0,0 };
 
+// Prototipo de funciones
 void ReadPins();
 void TransmisionCanalError(int codidgo[8]);
 void PatronError();
@@ -53,15 +58,19 @@ void ObtieneSindrome(int error[8]);
 void TransmisionErrorDecoder(int codidgo[8]);
 void DecodificaPalabra();
 
+// Funcion de inicio
 void setup()
 {
+	// Asignar un modo a los pines a utilizar
 	ReadPins();
 	Serial.begin(9600);
 	Serial.println("Puerto abierto");
 }
 
+// Funcion de proceso principal
 void loop()
 {
+	// Condiciones iniciales
 	delay(2000);
 	digitalWrite(COR1, 0);
 	digitalWrite(COR2, 0);
@@ -72,18 +81,19 @@ void loop()
 	digitalWrite(S3, 0);
 	digitalWrite(S4, 0);
 
-
+	// Control de fuente
 	cd = digitalRead(CD);
-
 	while (cd == 0)
-		cd = digitalRead(CD);
+		cd = digitalRead(CD); // Permitir transmision
 
+	// Lectura de palabra dato
 	int codigo[8]{ 0,0,0,0,0,0,0,0 };
 	d1 = digitalRead(D1);
 	d2 = digitalRead(D2);
 	d3 = digitalRead(D3);
 	d4 = digitalRead(D4);
 
+	// Generacion de palabra codigo
 	codigo[0] = d2 ^ d3 ^ d4;
 	codigo[1] = d1 ^ d2 ^ d3;
 	codigo[2] = d1 ^ d2 ^ d4;
@@ -93,21 +103,30 @@ void loop()
 	codigo[6] = d3;
 	codigo[7] = d4;
 
+	// Se inicia la transmision de la fuente 
+	// al canal
 	TransmisionCanalError(codigo);
 
+	// Se prepara el error en el canal y se 
+	// controla la transmision
 	if (digitalRead(CE))
 	{
-		// Leer errores
+		// Leer los errores a agregar
 		PatronError();
 		// Agrega el error a la palabra
 		AgregaError();
-		// Se obtiene sindrome y se transmite el error al decoder
+		// Se transmite la palabra codigo con error al 
+		// decoder
 		TransmisionErrorDecoder(ce);
+		// Se obtiene el sindrome a partir del error 
+		// del canal
 		ObtieneSindrome(error);
+		// Se corrige la palabra recibida
 		DecodificaPalabra();
 	}
 }
 
+// Asignacion de modo en los pines
 void ReadPins()
 {
 	pinMode(D1, INPUT);
@@ -152,21 +171,29 @@ void ReadPins()
 void TransmisionCanalError(int codidgo[8])
 {
 	Serial.println("Transmision fuente -> canal");
+	// Se inicia la transmision serial
 	for (auto i = 0; i < 8; ++i)
 	{
+		// Se transmite al canal
 		digitalWrite(CCOUT1, codidgo[i]);
+		// Se lee el dato transmitido al canal
 		ce[i] = digitalRead(CCIN1);
+		// Se muestra el dato recibido
 		digitalWrite(C1, ce[i]);
 		Serial.print(ce[i]);
+		// Timer
 		delay(1000);
 	}
 	Serial.println();
 	Serial.println("Transmision terminada");
+	// Se liberan recursos
 	digitalWrite(C1, 0);
 }
 
 void PatronError()
 {
+	// Se leen los errores a agregar a
+	// la palabra codigo
 	error[0] = digitalRead(E1);
 	error[1] = digitalRead(E2);
 	error[2] = digitalRead(E3);
@@ -183,6 +210,8 @@ void PatronError()
 
 void AgregaError()
 {
+	// Se busca donde fue configurado el error
+	// y se agrega a la palabra codigo
 	if (error[0]) ce[0] = ce[0] xor 1;
 	if (error[1]) ce[1] = ce[1] xor 1;
 	if (error[2]) ce[2] = ce[2] xor 1;
@@ -199,14 +228,20 @@ void AgregaError()
 
 void ObtieneSindrome(int error[8])
 {
+	// Si el canal dejo de transmitir se cancela la 
+	// operacion
 	if (!cr[0] && !cr[1] && !cr[2] && !cr[3] && !cr[4] && !cr[5] &&
 		!cr[6]) return;
 
+	// Se calcula el sindrome con base en la ecuaciones 
+	// obtenidas
 	sindrome[0] = error[0] ^ error[5] ^ error[6] ^ error[7];
 	sindrome[1] = error[1] ^ error[4] ^ error[5] ^ error[6];
 	sindrome[2] = error[2] ^ error[4] ^ error[5] ^ error[7];
 	sindrome[3] = error[3] ^ error[4] ^ error[6] ^ error[7];
 
+	// Se muestra el sindrome en el arreglo de leds asignados
+	// en el circuito
 	digitalWrite(S1, sindrome[0]);
 	digitalWrite(S2, sindrome[1]);
 	digitalWrite(S3, sindrome[2]);
@@ -220,26 +255,36 @@ void ObtieneSindrome(int error[8])
 
 void TransmisionErrorDecoder(int codidgo[8])
 {
-
+	// Se inicia la transmision serial
 	Serial.println("Transmision error -> decoder");
 	for (auto i = 0; i < 8; ++i)
 	{
+		// Se transmite al canal
 		digitalWrite(CCOUT2, codidgo[i]);
+		// Se lee el dato transmitido al canal
 		Serial.print(digitalRead(CCIN2));
+		// Se muestra el dato recibido
 		cr[i] = digitalRead(CCIN2);
 		digitalWrite(C2, cr[i]);
+		// Timer
 		delay(1000);
 	}
 	Serial.println();
 	Serial.println("Transmision terminada");
+	// Se liberan recursos
 	digitalWrite(C2, 0);
 }
 
 void DecodificaPalabra()
 {
-	if (!sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3])
+	// Si el sindrome es 0000, significa se interrumpio la 
+	// transmision o no se ha transmitido algo, por lo que se cancela 
+	// la funcnion
+	if (!sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3] && !digitalRead(CE))
 		return;
 
+	// Con base la matriz H transouesta se verifican la siguientes condiciones 
+	// para corregir errores simples y dobles
 	Serial.println("Corrigiendo errror");
 	if (sindrome[0] && !sindrome[1] && !sindrome[2] && !sindrome[3]) //1000
 	{
@@ -289,12 +334,15 @@ void DecodificaPalabra()
 		Serial.print(cr[i]);
 	}
 
+	// Se muestra la palabra corregida en el arrgle de 
+	// leds asignados
 	digitalWrite(COR1, cr[4]);
 	digitalWrite(COR2, cr[5]);
 	digitalWrite(COR3, cr[6]);
 	digitalWrite(COR4, cr[7]);
 	Serial.println("");
-	delay(000);
+	// Timer
+	delay(1000);
 }
 
 /*
